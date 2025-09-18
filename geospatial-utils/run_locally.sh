@@ -34,6 +34,8 @@ docker run ${docker_args} --name geospatial-utils \
   --add-host=host.docker.internal:host-gateway \
   -u "$(id -u):$(id -g)" \
   -e PYTHONBUFFERED=1 \
+  -v ./geospatial-utils/.cache:/app/geospatial-utils/.cache \
+  -v ./geospatial-utils/output:/app/geospatial-utils/output \
   -w /app/geospatial-utils \
   interuss/geospatial-utils \
   uv run main.py $OTHER_ARGS
