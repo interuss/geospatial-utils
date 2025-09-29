@@ -34,13 +34,13 @@ from uas_standards.eurocae_ed269 import (
 COUNTRY_REGION_MAPPING = {"CHE": 0, "LIE": 27}
 
 
-def _convert_restriction(restriction: Restriction):
+def _convert_restriction(restriction: Restriction) -> CodeZoneType:
     if restriction is Restriction.REQ_AUTHORISATION:
         return CodeZoneType.REQ_AUTHORIZATION
-    return restriction
+    return CodeZoneType(restriction)
 
 
-def _convert_uom(uom_dimensions: UomDimensions):
+def _convert_uom(uom_dimensions: UomDimensions) -> UomDistance:
     return UomDistance(uom_dimensions.lower())
 
 
@@ -57,7 +57,7 @@ def _convert_authority(za: UASZoneAuthority, default_lang: str) -> Authority:
         email=TextShortType(text=za.email, lang=default_lang)
         if "email" in za
         else None,
-        phone=za.phone if "phone" in za else None,
+        phone=za.phone if "phone" in za and za.phone else None,
         purpose=za.purpose if "purpose" in za else None,
         intervalBefore=za.intervalBefore if "intervalBefore" in za else None,
     )
@@ -79,47 +79,51 @@ def _convert_geometry(g: UASZoneAirspaceVolume) -> Geometry:
             extent=ExtentCircle(radius=hp.radius) if "radius" in hp else None,
             layer=vertical_layer,
         )
-    else:
-        return Polygon(
-            type="Polygon",
-            coordinates=hp.coordinates if "coordinates" in hp else None,
-            layer=vertical_layer,
-        )
+
+    return Polygon(
+        type="Polygon",
+        coordinates=hp.coordinates if "coordinates" in hp else None,
+        layer=vertical_layer,
+    )
 
 
-def _convert_reason(reason: list[Reason] | None) -> list[CodeZoneReasonType]:
-    result: list[CodeZoneReasonType] = []
+def _convert_reasons(reason: list[Reason] | None) -> list[CodeZoneReasonType] | None:
+    reason_types: list[CodeZoneReasonType] = []
     for r in reason or []:
         if r == Reason.FOREIGN_TERRITORY:
             raise NotImplementedError(
                 "Reason FOREIGN_TERRITORY is not supported yet. (Value inexistent in ED-318)"
             )
-        result.append(CodeZoneReasonType(r))
-    return result
+        reason_types.append(CodeZoneReasonType(r))
+    return reason_types if len(reason_types) > 0 else None
 
 
-def _convert_applicability(a: ApplicableTimePeriod) -> TimePeriod:
+def _convert_applicability(a: ApplicableTimePeriod) -> TimePeriod | None:
     schedule: list[DailyPeriod] = []
     if "schedule" in a:
         for d in a.schedule or []:
-            schedule.append(
-                DailyPeriod(
-                    day=CodeWeekDayType(d.day) if "day" in d else None,
-                    startTime=d.startTime if "startTime" in d else None,
-                    startEvent=None,
-                    endTime=d.endTime if "endTime" in d else None,
-                    endEvent=None,
-                )
+            daily_period = DailyPeriod(
+                day=CodeWeekDayType(d.day) if "day" in d else None,
+                startTime=d.startTime if "startTime" in d else None,
+                startEvent=None,
+                endTime=d.endTime if "endTime" in d else None,
+                endEvent=None,
             )
 
-    return TimePeriod(
+            if len(daily_period) > 0:
+                schedule.append(daily_period)
+
+    time_period = TimePeriod(
         startDateTime=a.startDateTime if "startDateTime" in a else None,
         endDateTime=a.endDateTime if "endDateTime" in a else None,
-        schedule=schedule,
+        schedule=schedule if len(schedule) > 0 else None,
     )
+    return time_period if len(time_period) > 0 else None
 
 
 def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED318Schema:
+    """Convert ED269 data to ED318 data.
+    Missing data in the new format is provided as a config."""
 
     dataset_metadata = DatasetMetadata(
         validFrom=None,
@@ -149,6 +153,20 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
         else:
             raise ValueError(f"No geometry found for geozone {zv.name}")
 
+        limited_applicability = [_convert_applicability(a) for a in zv.applicability]
+
+        # Ensures it is not a table of None since permanent zone may be represented by an empty object.
+        if (
+            sum(
+                [
+                    1 if la is not None and len(la) > 0 else 0
+                    for la in limited_applicability
+                ]
+            )
+            == 0
+        ):
+            limited_applicability = None
+
         feature = Feature(
             id=str(i),
             type="Feature",
@@ -162,7 +180,7 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
                 if "restrictionConditions" in zv
                 else None,
                 region=COUNTRY_REGION_MAPPING[zv.country],
-                reason=_convert_reason(zv.reason) if "reason" in zv else None,
+                reason=_convert_reasons(zv.reason) if "reason" in zv else None,
                 otherReasonInfo=[
                     TextShortType(text=zv.otherReasonInfo, lang=config.default_lang)
                 ],
@@ -173,9 +191,7 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
                 extendedProperties=zv.extendedProperties
                 if "extendedProperties" in zv
                 else None,
-                limitedApplicability=[
-                    _convert_applicability(a) for a in zv.applicability
-                ],
+                limitedApplicability=limited_applicability,
                 zoneAuthority=zone_authority,
                 dataSource=None,
             ),

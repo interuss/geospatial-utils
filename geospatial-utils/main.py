@@ -1,14 +1,14 @@
 import argparse
 import json
-import pathlib
-import fileutils
 import os
+import pathlib
 import sys
+
+import config
+import convert
+import fileutils
 from fileutils import ed269
 from loguru import logger
-import convert
-import config
-
 
 version = os.environ.get("GEOSPATIAL_UTILS_VERSION", "unknown")
 

@@ -1,5 +1,6 @@
 import json
 import pathlib
+
 from uas_standards.eurocae_ed269 import ED269Schema
 
 
