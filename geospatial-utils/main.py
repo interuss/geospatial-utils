@@ -1,5 +1,6 @@
 import argparse
 import json
+import pathlib
 import fileutils
 import os
 import sys
@@ -35,16 +36,16 @@ def main():
 
     if args.command == "convert":
         logger.debug(f"Converting {args.input_url} to {args.output_file}")
-        source_url = args.input_url
         source = fileutils.get(args.input_url, int(args.ttl))
         logger.debug(f"Local input copy: {source.absolute()}")
 
-        data = ed269.load(source)
-        destination = pathlib.Path(args.output_file)
-        destination.write_text(json.dumps(data, indent=2))
+        data = ed269.loads(source)
+        # output = pathlib.Path(args.output_file)
+        # output.write_text(json.dumps(data, indent=2))
 
-        logger.debug(f"Output saved to {destination.absolute()}")
-
+        logger.debug(json.dumps(data, indent=2))
+        logger.error("Work in progress. The parser has not been fully implemented yet. The ED269 parser output was printed above for inspection. (debug log level required)")
+        sys.exit(1)
     else:
         parser.print_help()
         sys.exit(1)
