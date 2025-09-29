@@ -1,8 +1,9 @@
 import argparse
+import json
+import fileutils
 import os
 import sys
-
-import fileutils
+from fileutils import ed269
 from loguru import logger
 
 version = os.environ.get("GEOSPATIAL_UTILS_VERSION", "unknown")
@@ -34,9 +35,15 @@ def main():
 
     if args.command == "convert":
         logger.debug(f"Converting {args.input_url} to {args.output_file}")
+        source_url = args.input_url
         source = fileutils.get(args.input_url, int(args.ttl))
         logger.debug(f"Local input copy: {source.absolute()}")
-        # destination = pathlib.Path(args.output_file)
+
+        data = ed269.load(source)
+        destination = pathlib.Path(args.output_file)
+        destination.write_text(json.dumps(data, indent=2))
+
+        logger.debug(f"Output saved to {destination.absolute()}")
 
     else:
         parser.print_help()
