@@ -35,7 +35,7 @@ def main():
     if args.command == "convert":
         logger.debug(f"Converting {args.input_url} to {args.output_file}")
         source = fileutils.get(args.input_url, int(args.ttl))
-        logger.debug(f"Input cached to {source.absolute()}")
+        logger.debug(f"Local input copy: {source.absolute()}")
         # destination = pathlib.Path(args.output_file)
 
     else:
