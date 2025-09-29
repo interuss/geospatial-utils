@@ -17,10 +17,6 @@ cd geospatial-utils || exit 1
 make image
 )
 
-# https://stackoverflow.com/a/9057392
-# shellcheck disable=SC2124
-OTHER_ARGS=${@:2}
-
 if [ "$CI" == "true" ]; then
   docker_args=""
 else
@@ -38,4 +34,4 @@ docker run ${docker_args} --name geospatial-utils \
   -v ./geospatial-utils/output:/app/geospatial-utils/output \
   -w /app/geospatial-utils \
   interuss/geospatial-utils \
-  uv run main.py $OTHER_ARGS
+  uv run main.py ${@}
