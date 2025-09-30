@@ -1,0 +1,3 @@
+[submodule "interfaces/ED-318"]
+	path = schemas/ED-318
+	url = https://github.com/UASGeoZones/ED-318.git
