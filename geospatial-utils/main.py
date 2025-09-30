@@ -43,6 +43,7 @@ def main():
         logger.debug(f"Local input copy: {source.absolute()}")
 
         ed269_data = ed269.loads(source)
+        # TODO: Parametrize the configuration
         ed318_data = convert.from_ed269_to_ed318(ed269_data, config=config.FOCA)
         output = pathlib.Path(args.output_file)
         output.write_text(json.dumps(ed318_data), encoding="utf-8")
