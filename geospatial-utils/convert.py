@@ -54,9 +54,7 @@ def _convert_authority(za: UASZoneAuthority, default_lang: str) -> Authority:
         if "contactName" in za
         else [],
         siteURL=za.siteURL if "siteURL" in za else None,
-        email=TextShortType(text=za.email, lang=default_lang)
-        if "email" in za
-        else None,
+        email=za.email if "email" in za else None,
         phone=za.phone if "phone" in za and za.phone else None,
         purpose=za.purpose if "purpose" in za else None,
         intervalBefore=za.intervalBefore if "intervalBefore" in za else None,
@@ -155,7 +153,7 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
 
         limited_applicability = [_convert_applicability(a) for a in zv.applicability]
 
-        # Ensures it is not a table of None since permanent zone may be represented by an empty object.
+        # Ensures it is not a table of None since permanent zone may be represented like this.
         if (
             sum(
                 [
@@ -167,6 +165,18 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
         ):
             limited_applicability = None
 
+        # Ensures the converter accepts a list of restriction_conditions.
+        # TOOD: move to a pre-processor
+        restriction_conditions: str | None = None
+        if "restrictionConditions" in zv and zv.restrictionConditions is not None:
+            if isinstance(zv.restrictionConditions, dict):
+                if len(zv.restrictionConditions) == 1:
+                    restriction_conditions = zv.restrictionConditions[0]
+                else:
+                    raise ValueError("Unexpected array with more than one item.")
+            else:
+                restriction_conditions = str(zv.restrictionConditions)
+
         feature = Feature(
             id=str(i),
             type="Feature",
@@ -176,9 +186,7 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
                 name=[TextShortType(text=zv.name, lang=config.default_lang)],
                 type=_convert_restriction(zv.restriction),
                 variant=zv.type,
-                restrictionConditions=zv.restrictionConditions
-                if "restrictionConditions" in zv
-                else None,
+                restrictionConditions=restriction_conditions,
                 region=COUNTRY_REGION_MAPPING[zv.country],
                 reason=_convert_reasons(zv.reason) if "reason" in zv else None,
                 otherReasonInfo=[
