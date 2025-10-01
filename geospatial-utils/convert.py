@@ -1,4 +1,14 @@
 from config import ED318Additions
+from uas_standards.eurocae_ed269 import (
+    ApplicableTimePeriod,
+    ED269Schema,
+    HorizontalProjectionType,
+    Reason,
+    Restriction,
+    UASZoneAirspaceVolume,
+    UASZoneAuthority,
+    UomDimensions,
+)
 from uas_standards.eurocae_ed318 import (
     Authority,
     CodeVerticalReferenceType,
@@ -19,16 +29,6 @@ from uas_standards.eurocae_ed318 import (
     UASZone,
     UomDistance,
     VerticalLayer,
-)
-from uas_standards.eurocae_ed269 import (
-    ApplicableTimePeriod,
-    ED269Schema,
-    HorizontalProjectionType,
-    Reason,
-    Restriction,
-    UASZoneAirspaceVolume,
-    UASZoneAuthority,
-    UomDimensions,
 )
 
 COUNTRY_REGION_MAPPING = {"CHE": 0, "LIE": 27}
