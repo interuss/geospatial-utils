@@ -43,7 +43,8 @@ def main():
         logger.debug(f"Local input copy: {source.absolute()}")
 
         ed269_data = ed269.loads(source)
-        # TODO: Parametrize the configuration
+        # TODO: Move hard-coded configuration to a json file.
+        logger.warning("Additional data not provided in ED269 is hard-coded with Swiss FOCA information. This will be moved to a configurable file in the near future.")
         ed318_data = convert.from_ed269_to_ed318(ed269_data, config=config.FOCA)
         output = pathlib.Path(args.output_file)
         output.write_text(json.dumps(ed318_data), encoding="utf-8")

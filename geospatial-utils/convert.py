@@ -1,5 +1,5 @@
 from config import ED318Additions
-from models.eurocae_ed318 import (
+from uas_standards.eurocae_ed318 import (
     Authority,
     CodeVerticalReferenceType,
     CodeWeekDayType,
@@ -165,12 +165,14 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
         ):
             limited_applicability = None
 
-        # Ensures the converter accepts a list of restriction_conditions.
-        # TOOD: move to a pre-processor
+        # Ensures the converter accepts either an optional string as specified in the standard
+        # definition or a list of str of 0 or 1 item as provided in the jsonschema in the standard.
         restriction_conditions: str | None = None
         if "restrictionConditions" in zv and zv.restrictionConditions is not None:
             if isinstance(zv.restrictionConditions, dict):
-                if len(zv.restrictionConditions) == 1:
+                if len(zv.restrictionConditions) == 0:
+                    restriction_conditions = None
+                elif len(zv.restrictionConditions) == 1:
                     restriction_conditions = zv.restrictionConditions[0]
                 else:
                     raise ValueError("Unexpected array with more than one item.")

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from implicitdict import ImplicitDict, StringBasedDateTime
-from models.eurocae_ed318 import TextShortType
+from uas_standards.eurocae_ed318 import TextShortType
 
 
 class ConverterConfiguration(ImplicitDict):
