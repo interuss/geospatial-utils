@@ -7,6 +7,7 @@ import sys
 import config
 import convert
 import fileutils
+import validate
 from fileutils import ed269
 from loguru import logger
 
@@ -44,12 +45,23 @@ def main():
 
         ed269_data = ed269.loads(source)
         # TODO: Move hard-coded configuration to a json file.
-        logger.warning("Additional data not provided in ED269 is hard-coded with Swiss FOCA information. This will be moved to a configurable file in the near future.")
+        logger.warning(
+            "Additional data not provided in ED269 is hard-coded with Swiss FOCA information. This will be moved to a configurable file in the near future."
+        )
         ed318_data = convert.from_ed269_to_ed318(ed269_data, config=config.FOCA)
         output = pathlib.Path(args.output_file)
-        output.write_text(json.dumps(ed318_data), encoding="utf-8")
+        json_output = json.dumps(ed318_data)
+        output.write_text(json_output, encoding="utf-8")
+        logger.debug(f"Successful conversion. File saved to: {output.absolute()}")
 
-        logger.info(f"Successful conversion. ED-318 saved to {output.absolute()}")
+        errors = validate.ed318(json.loads(json_output))
+        if len(errors) > 0:
+            for e in errors:
+                logger.error(f"{e.json_path}: {e.message}")
+            sys.exit(1)
+        logger.info(
+            f"Successful conversion and validation. ED-318 saved to {output.absolute()}"
+        )
 
     else:
         parser.print_help()

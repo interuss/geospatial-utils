@@ -50,6 +50,7 @@ WORKDIR /app/geospatial-utils
 
 # Add core content from repo
 ADD ./geospatial-utils /app/geospatial-utils
+ADD ./schemas /app/schemas
 
 # Discover `geospatial-utils` module in Python
 ENV PYTHONPATH=/app
