@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 from config import ED318Additions
 from uas_standards.eurocae_ed269 import (
     ApplicableTimePeriod,
@@ -124,7 +126,7 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
     Missing data in the new format is provided as a config."""
 
     dataset_metadata = DatasetMetadata(
-        validFrom=None,
+        validFrom=datetime.now(UTC).isoformat(),
         validTo=None,
         provider=config.provider,
         description=config.description,
@@ -169,7 +171,7 @@ def from_ed269_to_ed318(ed269_data: ED269Schema, config: ED318Additions) -> ED31
         # definition or a list of str of 0 or 1 item as provided in the jsonschema in the standard.
         restriction_conditions: str | None = None
         if "restrictionConditions" in zv and zv.restrictionConditions is not None:
-            if isinstance(zv.restrictionConditions, dict):
+            if isinstance(zv.restrictionConditions, list):  # pyright: ignore[reportUnnecessaryIsInstance]
                 if len(zv.restrictionConditions) == 0:
                     restriction_conditions = None
                 elif len(zv.restrictionConditions) == 1:
