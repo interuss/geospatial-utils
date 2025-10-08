@@ -132,7 +132,7 @@ def _restriction_code(restriction_conditions: str | None, _type: CodeZoneType) -
             return RESTRICTION_TEXT_MAPPING[code]
 
     raise ValueError(
-        f"FOCA adjuster on restriction conditions field: Unexpected input {_type}"
+        f"CodeZoneType was {_type} rather than NO_RESTRICTION and no known ED-269 English restriction text matched '{restriction_conditions}'"
     )
 
 
