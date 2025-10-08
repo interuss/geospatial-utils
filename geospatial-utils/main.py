@@ -55,6 +55,9 @@ def main():
         ed318_data = convert.from_ed269_to_ed318(ed269_data, config=config.FOCA)
 
         # Adjustments
+        logger.warning(
+            "The output is adjusted with Swiss FOCA configuration which contains a non-conform ()"
+        )
         ed318_data = adjusters.foca.adjust(ed318_data)
 
         # Save to file

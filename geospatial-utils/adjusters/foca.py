@@ -123,7 +123,7 @@ ADD_INFO_TEXT = {
 }
 
 
-def _restriction_code(restriction_conditions: str | None, _type: CodeZoneType) -> str:
+def _restriction_code_for(restriction_conditions: str | None, _type: CodeZoneType) -> str:
     if _type == CodeZoneType.NO_RESTRICTION:
         return "REC05"
 
@@ -136,7 +136,7 @@ def _restriction_code(restriction_conditions: str | None, _type: CodeZoneType) -
     )
 
 
-def _add_info_text(_type: CodeZoneType) -> list[TextShortType]:
+def _add_info_text_for(_type: CodeZoneType) -> list[TextShortType]:
     if _type == CodeZoneType.REQ_AUTHORIZATION:
         return ADD_INFO_TEXT["EXP02"]
     elif _type == CodeZoneType.NO_RESTRICTION:
@@ -150,7 +150,7 @@ def _add_info_text(_type: CodeZoneType) -> list[TextShortType]:
 def _adjust_restriction_conditions(
     restriction_conditions: str | None, _type: CodeZoneType
 ) -> str:
-    restriction_code = _restriction_code(restriction_conditions, _type)
+    restriction_code = _restriction_code_for(restriction_conditions, _type)
 
     for translation in RESTRICTION_TEXT[restriction_code]:
         if translation.lang == DEFAULT_LANG:
@@ -161,18 +161,18 @@ def _adjust_restriction_conditions(
     )
 
 
-def _adjust_extended_properties(
+def _extended_properties_for(
     restriction_conditions: str | None, _type: CodeZoneType
 ) -> dict[str, list[TextShortType]]:
-    restriction_code = _restriction_code(restriction_conditions, _type)
+    restriction_code = _restriction_code_for(restriction_conditions, _type)
 
     return {
-        "addInfoText": _add_info_text(_type),
+        "addInfoText": _add_info_text_for(_type),
         "requirementText": RESTRICTION_TEXT[restriction_code],
     }
 
 
-def _adjust_purpose(_type: CodeZoneType) -> CodeAuthorityRole:
+def _role_for(_type: CodeZoneType) -> CodeAuthorityRole:
     if _type == CodeZoneType.REQ_AUTHORIZATION:
         return CodeAuthorityRole.AUTHORIZATION
     elif _type == CodeZoneType.NO_RESTRICTION:
@@ -181,7 +181,7 @@ def _adjust_purpose(_type: CodeZoneType) -> CodeAuthorityRole:
         raise ValueError(f"CodeAuthorityRole not known for CodeZoneType '{_type}'")
 
 
-def adjust(ed318_data: ED318Schema) -> dict[Any, str]:
+def adjust(ed318_data: ED318Schema) -> ED318Schema:
     for f in ed318_data.features:
         if f.properties is not None:
             original_restriction_conditions = f.properties.restrictionConditions
@@ -189,11 +189,11 @@ def adjust(ed318_data: ED318Schema) -> dict[Any, str]:
             f.properties.restrictionConditions = _adjust_restriction_conditions(
                 original_restriction_conditions, original_type
             )
-            f.properties.extendedProperties = _adjust_extended_properties(
+            f.properties.extendedProperties = _extended_properties_for(
                 original_restriction_conditions, original_type
             )
             if "zoneAuthority" in f.properties:
                 for za in f.properties.zoneAuthority:
-                    za.purpose = _adjust_purpose(original_type)
+                    za.purpose = _role_for(original_type)
 
     return ed318_data
