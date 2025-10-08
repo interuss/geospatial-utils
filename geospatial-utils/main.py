@@ -56,7 +56,7 @@ def main():
 
         # Adjustments
         logger.warning(
-            "The output is adjusted with Swiss FOCA configuration which contains a non-conform ()"
+            "The output is adjusted with Swiss FOCA configuration. The output contains non-conform ConditionExpressionType values."
         )
         ed318_data = adjusters.foca.adjust(ed318_data)
 

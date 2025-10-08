@@ -20,7 +20,6 @@ ED269_RESTRICTION_TEXT_EN = {
     "RST03": "The operation of unmanned aircraft weighing more than 250 g is prohibited from an altitude of 120 m above ground.",
 }
 
-# Purposedly not used yet.
 RESTRICTION_TEXT = {
     "REC02a": [
         TextShortType(
@@ -181,8 +180,14 @@ def _role_for(_type: CodeZoneType) -> CodeAuthorityRole:
         raise ValueError(f"CodeAuthorityRole not known for CodeZoneType '{_type}'")
 
 
-def adjust(ed318_data: ED318Schema) -> ED318Schema:
-    for f in ed318_data.features:
+def adjust(ed318_data: ED318Schema) -> dict[str, Any]:
+    """
+    Adjust the ED318 schema to comply with Swiss FOCA requirements.
+
+    Note that the restriction conditions field is used as a string and does not respect the ConditionExpressionType synthax.
+    """
+    adjusted: dict[str, Any] = ed318_data
+    for f in adjusted.features:
         if f.properties is not None:
             original_restriction_conditions = f.properties.restrictionConditions
             original_type = f.properties.type
@@ -196,4 +201,4 @@ def adjust(ed318_data: ED318Schema) -> ED318Schema:
                 for za in f.properties.zoneAuthority:
                     za.purpose = _role_for(original_type)
 
-    return ed318_data
+    return adjusted
