@@ -123,7 +123,9 @@ ADD_INFO_TEXT = {
 
 
 # Swiss FOCA requires the restriction_conditions field to be a string instead of ConditionExpressionType
-def _restriction_code_for(restriction_conditions: str | None, _type: CodeZoneType) -> str:
+def _restriction_code_for(
+    restriction_conditions: str | None, _type: CodeZoneType
+) -> str:
     if _type == CodeZoneType.NO_RESTRICTION:
         return "REC05"
 
@@ -142,9 +144,7 @@ def _additional_info_text_for(_type: CodeZoneType) -> list[TextShortType]:
     elif _type == CodeZoneType.NO_RESTRICTION:
         return ADD_INFO_TEXT["EXP05"]
     else:
-        raise ValueError(
-            f"Cannot determine info text from CodeZoneType '{_type}'"
-        )
+        raise ValueError(f"Cannot determine info text from CodeZoneType '{_type}'")
 
 
 def _adjust_restriction_conditions(
