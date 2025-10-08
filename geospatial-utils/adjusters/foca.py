@@ -122,6 +122,7 @@ ADD_INFO_TEXT = {
 }
 
 
+# Swiss FOCA requires the restriction_conditions field to be a string instead of ConditionExpressionType
 def _restriction_code_for(restriction_conditions: str | None, _type: CodeZoneType) -> str:
     if _type == CodeZoneType.NO_RESTRICTION:
         return "REC05"
@@ -135,7 +136,7 @@ def _restriction_code_for(restriction_conditions: str | None, _type: CodeZoneTyp
     )
 
 
-def _add_info_text_for(_type: CodeZoneType) -> list[TextShortType]:
+def _additional_info_text_for(_type: CodeZoneType) -> list[TextShortType]:
     if _type == CodeZoneType.REQ_AUTHORIZATION:
         return ADD_INFO_TEXT["EXP02"]
     elif _type == CodeZoneType.NO_RESTRICTION:
@@ -166,7 +167,7 @@ def _extended_properties_for(
     restriction_code = _restriction_code_for(restriction_conditions, _type)
 
     return {
-        "addInfoText": _add_info_text_for(_type),
+        "addInfoText": _additional_info_text_for(_type),
         "requirementText": RESTRICTION_TEXT[restriction_code],
     }
 
@@ -184,7 +185,7 @@ def adjust(ed318_data: ED318Schema) -> dict[str, Any]:
     """
     Adjust the ED318 schema to comply with Swiss FOCA requirements.
 
-    Note that the restriction conditions field is used as a string and does not respect the ConditionExpressionType synthax.
+    Note that the restriction conditions field is used as a string and does not respect the ConditionExpressionType synthax for restriction conditions value.
     """
     adjusted: dict[str, Any] = ed318_data
     for f in adjusted.features:
