@@ -157,7 +157,7 @@ def _adjust_restriction_conditions(
             return translation.text or ""
 
     raise ValueError(
-        f"FOCA adjuster on extended properties field: {DEFAULT_LANG} not found"
+        f"Could not find '{DEFAULT_LANG}' language in RESTRICTION_TEXT for code '{restriction_code}'"
     )
 
 
