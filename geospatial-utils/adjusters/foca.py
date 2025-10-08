@@ -143,7 +143,7 @@ def _add_info_text(_type: CodeZoneType) -> list[TextShortType]:
         return ADD_INFO_TEXT["EXP05"]
     else:
         raise ValueError(
-            f"FOCA adjuster on extended properties field: Unexpected input {_type}"
+            f"Cannot determine info text from CodeZoneType '{_type}'"
         )
 
 
