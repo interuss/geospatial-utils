@@ -178,7 +178,7 @@ def _adjust_purpose(_type: CodeZoneType) -> CodeAuthorityRole:
     elif _type == CodeZoneType.NO_RESTRICTION:
         return CodeAuthorityRole.INFORMATION
     else:
-        raise ValueError(f"FOCA adjuster on purpose field: Unexpected input {_type}")
+        raise ValueError(f"CodeAuthorityRole not known for CodeZoneType '{_type}'")
 
 
 def adjust(ed318_data: ED318Schema) -> dict[Any, str]:
