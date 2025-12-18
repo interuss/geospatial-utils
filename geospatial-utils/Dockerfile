@@ -10,11 +10,8 @@ FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 # Not -alpine because: https://stackoverflow.com/a/58028091/651139
 
 # Install system tools
-#   openssl: Provides TLS tools
-#   curl: Useful debugging utility
-#   gcc: Required to build various packages
 #   ca-certificates: Needed to accurately validate TLS connections
-RUN apt-get update --fix-missing && apt-get install -y make openssl curl libgeos-dev gcc g++ && apt-get install ca-certificates
+RUN apt-get update --fix-missing && apt-get install ca-certificates
 
 # Required to build in an ARM environment
 #   gevent: libffi-dev libssl-dev python3-dev build-essential
