@@ -1,0 +1,72 @@
+{
+    "name": "Swiss FOCA",
+    "adjusters": [
+        "foca"
+    ],
+    "ed318_additions": {
+        "default_lang": "en-GB",
+        "provider": [
+            {
+                "lang": "de-CH",
+                "text": "BAZL"
+            },
+            {
+                "lang": "fr-CH",
+                "text": "OFAC"
+            },
+            {
+                "lang": "it-CH",
+                "text": "UFAC"
+            },
+            {
+                "lang": "en-GB",
+                "text": "FOCA"
+            }
+        ],
+        "description": [
+            {
+                "lang": "de-CH",
+                "text": "Schweizerische UAS Geozones, herausgegeben vom Bundesamt f\u00fcr Zivilluftfahrt (BAZL). Umwandlung aus dem Modell ED-269."
+            },
+            {
+                "lang": "fr-CH",
+                "text": "UAS Geozones suisses publi\u00e9es par l'Office f\u00e9d\u00e9ral de l'aviation civile (OFAC). Conversion \u00e0 partir du mod\u00e8le ED-269"
+            },
+            {
+                "lang": "it-CH",
+                "text": "Geozones UAS svizzere emesse dall'Ufficio federale dell'aviazione civile (UFAC). Conversione dal modello ED-269"
+            },
+            {
+                "lang": "en-GB",
+                "text": "Swiss UAS Geozones issued by the Federal Office of Civil Aviation (FOCA). Conversion from the ED-269 model"
+            }
+        ],
+        "technicalLimitation": [
+            {
+                "lang": "de-CH",
+                "text": "Der Datensatz entsteht durch die Umwandlung der Originaldaten des ED-269-Modells ins neue ED-318. F\u00fcr die Umwandlung sind einige Daten\u00e4nderungen n\u00f6tig. Diese Datei wurde in INTERLIS 2.4 erstellt."
+            },
+            {
+                "lang": "fr-CH",
+                "text": "Le fichier a \u00e9t\u00e9 cr\u00e9\u00e9 en convertissant les donn\u00e9es originales du mod\u00e8le ED-269 dans le nouveau ED-318. La conversion n\u00e9cessite des modifications des donn\u00e9es. Ce fichier a \u00e9t\u00e9 cr\u00e9\u00e9 en INTERLIS 2.4"
+            },
+            {
+                "lang": "it-CH",
+                "text": "Il dataset \u00e8 stato creato convertendo i dati originali del modello ED-269 nel nuovo ED-318. Per la conversione alcune modifiche dei dati sono necessarie. Questo file \u00e8 stato creato in INTERLIS 2.4"
+            },
+            {
+                "lang": "en-GB",
+                "text": "The dataset was created by converting the original data from the ED-269 model to the new ED-318. Some data modifications are necessary for conversion. This file was created in INTERLIS 2.4"
+            }
+        ],
+        "issued": "2025-12-16T14:38:18.121239Z",
+        "otherGeoid": "CHGeo2004",
+        "collection_name": "Swiss UAS Geozones according to ED-318 converted from the ED-269 data model",
+        "feature_collection_bbox": [
+            2485410.215,
+            1075268.136,
+            2833857.724,
+            1295933.698
+        ]
+    }
+}
