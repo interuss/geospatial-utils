@@ -4,7 +4,11 @@ This repository contains a suite of tools to manage geospatial data
 
 ## Getting started
 
-To run the tool, install Docker. Then, run the following command: `./geospatial-utils/run_locally.sh --help`
+To run the tool:
+
+* Install Docker.
+* Ensure you initialized submodules with `git submodule update --init --recursive`
+* Run the following command: `./geospatial-utils/run_locally.sh --help`
 
 ## Tools
 
