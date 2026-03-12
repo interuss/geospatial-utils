@@ -3,6 +3,10 @@
     "adjusters": [
         "foca"
     ],
+    "excluded_features_ed318_identifiers": [
+        "CTR0004",
+        "CTR0015"
+    ],
     "ed318_additions": {
         "default_lang": "en-GB",
         "provider": [
