@@ -12,6 +12,7 @@ from config import ConverterConfiguration
 from fileutils import ed269
 from implicitdict import ImplicitDict
 from loguru import logger
+from uas_standards.eurocae_ed318 import Feature
 
 version = os.environ.get("GEOSPATIAL_UTILS_VERSION", "unknown")
 
@@ -74,9 +75,32 @@ def main():
 
             ed318_data = getattr(adjusters, adjuster).adjust(ed318_data)
 
+        # Filter out intentionally excluded features
+        if (
+            "excluded_features_ed318_identifiers" in config
+            and config.excluded_features_ed318_identifiers
+        ):
+
+            def _should_keep(feat: Feature) -> bool:
+                if "properties" not in feat or feat.properties is None:
+                    return True
+                return (
+                    feat.properties.identifier
+                    not in config.excluded_features_ed318_identifiers
+                )
+
+            filtered_features = list(filter(_should_keep, ed318_data.features))
+            logger.info(
+                f"Excluded {len(ed318_data.features) - len(filtered_features)} feature(s)"
+            )
+            ed318_data.features = filtered_features
+
         # Save to file
         output = pathlib.Path(args.output_file)
-        json_output = json.dumps(ed318_data)
+        json_output = json.dumps(
+            ed318_data,
+            sort_keys=True,  # sorting the keys allows the output JSON to be a bit more deterministic, this notably helps some consumers, see https://github.com/focagis/geoawareness-cis/issues/10
+        )
         output.write_text(json_output, encoding="utf-8")
         logger.debug(f"Successful conversion. File saved to: {output.absolute()}")
 
