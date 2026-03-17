@@ -4,13 +4,15 @@ import os
 import pathlib
 import sys
 
-import adjusters.foca
-import config
+import adjusters
 import convert
 import fileutils
 import validate
+from config import ConverterConfiguration
 from fileutils import ed269
+from implicitdict import ImplicitDict
 from loguru import logger
+from uas_standards.eurocae_ed318 import Feature
 
 version = os.environ.get("GEOSPATIAL_UTILS_VERSION", "unknown")
 
@@ -37,6 +39,13 @@ def main():
         default="0",
     )
 
+    convert_cmd.add_argument(
+        "-c",
+        "--config",
+        help="Path to the configuration to use.",
+        default="configs/FOCA.json",
+    )
+
     args = parser.parse_args()
 
     if args.command == "convert":
@@ -46,23 +55,52 @@ def main():
 
         # Load source
         ed269_data = ed269.loads(source)
-        # TODO: Move hard-coded configuration to a json file.
-        logger.warning(
-            "Additional data not provided in ED269 is hard-coded with Swiss FOCA information. This will be moved to a configurable file in the near future."
-        )
+
+        # Load config
+        with open(args.config) as f:
+            data = json.load(f)
+            config = ImplicitDict.parse(data, ConverterConfiguration)
+        logger.info(f"Using configuration {config.name}")
 
         # Conversion
-        ed318_data = convert.from_ed269_to_ed318(ed269_data, config=config.FOCA)
+        ed318_data = convert.from_ed269_to_ed318(
+            ed269_data, config=config.ed318_additions
+        )
 
         # Adjustments
-        logger.warning(
-            "The output is adjusted with Swiss FOCA configuration. The output contains non-conform ConditionExpressionType values."
-        )
-        ed318_data = adjusters.foca.adjust(ed318_data)
+        for adjuster in config.adjusters:
+            if not hasattr(adjusters, adjuster):
+                logger.error(f"Unknown adjuster: {adjuster}")
+                sys.exit(1)
+
+            ed318_data = getattr(adjusters, adjuster).adjust(ed318_data)
+
+        # Filter out intentionally excluded features
+        if (
+            "excluded_features_ed318_identifiers" in config
+            and config.excluded_features_ed318_identifiers
+        ):
+
+            def _should_keep(feat: Feature) -> bool:
+                if "properties" not in feat or feat.properties is None:
+                    return True
+                return (
+                    feat.properties.identifier
+                    not in config.excluded_features_ed318_identifiers
+                )
+
+            filtered_features = list(filter(_should_keep, ed318_data.features))
+            logger.info(
+                f"Excluded {len(ed318_data.features) - len(filtered_features)} feature(s)"
+            )
+            ed318_data.features = filtered_features
 
         # Save to file
         output = pathlib.Path(args.output_file)
-        json_output = json.dumps(ed318_data)
+        json_output = json.dumps(
+            ed318_data,
+            sort_keys=True,  # sorting the keys allows the output JSON to be a bit more deterministic, this notably helps some consumers, see https://github.com/focagis/geoawareness-cis/issues/10
+        )
         output.write_text(json_output, encoding="utf-8")
         logger.debug(f"Successful conversion. File saved to: {output.absolute()}")
 
