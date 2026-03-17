@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
 
 from config import ED318Additions
+from geo import ensure_polygon_rings_winding_order
 from uas_standards.eurocae_ed269 import (
     ApplicableTimePeriod,
     ED269Schema,
@@ -82,7 +83,9 @@ def _convert_geometry(g: UASZoneAirspaceVolume) -> Geometry:
 
     return Polygon(
         type="Polygon",
-        coordinates=hp.coordinates if "coordinates" in hp else None,
+        coordinates=ensure_polygon_rings_winding_order(hp.coordinates)
+        if "coordinates" in hp and hp.coordinates
+        else None,
         layer=vertical_layer,
     )
 
