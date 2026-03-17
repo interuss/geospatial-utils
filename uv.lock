@@ -110,16 +110,16 @@ wheels = [
 
 [[package]]
 name = "implicitdict"
-version = "4.0.0"
+version = "4.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "arrow" },
     { name = "jsonschema" },
     { name = "pytimeparse" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d1/35/08b36415cd0da95c347ce9e2ad74440d67108a3a14e47ec39ffb8141bd85/implicitdict-4.0.0.tar.gz", hash = "sha256:d7a799822e6be60884b7a4a91716d1ec805c184040e8b3da3eac6d0d4c012d2e", size = 57839, upload-time = "2025-08-19T09:27:58.197Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e8/92/335c435d15e2d198a679c3fbb56cd20907f204c386c1b8facdc06cea8256/implicitdict-4.0.1.tar.gz", hash = "sha256:6413da2faeb03f1d20a537f357c05a58cef8ab32e8923eae4e79ee2396546074", size = 57876, upload-time = "2025-10-01T15:07:54.467Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bf/0c/2b5bc3961cc1d0cc279cb7ef29b0dcdba328a935dfa5c9b8a36d5876d3e4/implicitdict-4.0.0-py3-none-any.whl", hash = "sha256:b0450ce897b982a32c8969c5c7a8d6fe0896add536c64a13403c2b6d2f86ef20", size = 13625, upload-time = "2025-08-19T09:27:57.323Z" },
+    { url = "https://files.pythonhosted.org/packages/02/ce/d947f5995b160d56a2e4a2ba48eacc59884cc2cabfb9eafe4ac49d80575d/implicitdict-4.0.1-py3-none-any.whl", hash = "sha256:71e16dc977a944c0279f5f383db63b44a14a9961b32b535e011fbba782e88a70", size = 13658, upload-time = "2025-10-01T15:07:53.603Z" },
 ]
 
 [[package]]
@@ -320,14 +320,14 @@ wheels = [
 
 [[package]]
 name = "uas-standards"
-version = "4.1.0"
+version = "4.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "implicitdict" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/64/b8/0c9413ff91dce6dc365b9069a09b519787718c2e1c0d9b59c45d54528bfa/uas_standards-4.1.0.tar.gz", hash = "sha256:8e91ebeb996bb1c60ed15384910c9a3edb1628141d15e8e5a2a66c3cc6fac68d", size = 123184, upload-time = "2025-10-01T11:45:55.003Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a7/1b/7e660b8e4ee02344e76f9c45da18556793f4512f916bc324c7043e50d207/uas_standards-4.1.1.tar.gz", hash = "sha256:b3ed61fc13abcdc2ae66167c7306b10c19e6b274d47a006d94700fd444024e38", size = 123229, upload-time = "2025-10-06T21:21:17.525Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/a1/ebb33199d3996fe2004c2dbda9f231fbd874e41b52b11b6cc5bf545347de/uas_standards-4.1.0-py3-none-any.whl", hash = "sha256:c190de8c8e6856e15a7cc4a91434aab906ceef01ac434ad7b5de1654b7d15256", size = 85419, upload-time = "2025-10-01T11:45:53.786Z" },
+    { url = "https://files.pythonhosted.org/packages/f8/5a/4dd947e91b51b9b76f4148b5ec64d97dd3bfda3907611a28e26033fc2c10/uas_standards-4.1.1-py3-none-any.whl", hash = "sha256:e8bd0ec3ccf6572c043ce92ef51f3fc0dc79e42bea410bee3a11587668d50c09", size = 85428, upload-time = "2025-10-06T21:21:16.445Z" },
 ]
 
 [[package]]
