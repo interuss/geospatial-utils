@@ -8,6 +8,7 @@ class ConverterConfiguration(ImplicitDict):
     name: str
     ed318_additions: ED318Additions
     adjusters: list[str]
+    excluded_features_ed318_identifiers: list[str] = []
 
 
 class ED318Additions(ImplicitDict):
